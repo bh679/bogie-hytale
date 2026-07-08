@@ -17,3 +17,4 @@ run/
 # Local secrets / creds
 *.local.md
 *.local.toml
+run-server/

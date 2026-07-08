@@ -28,6 +28,26 @@ kinematic (scripted paths), which is dramatically simpler than a physics engine.
   the block/chunk mutation and entity APIs this design depends on.
 - Distribution: CurseForge (official partner).
 
+## Phase 1 spike findings (headless-verified; in-game pending)
+
+- **ECS integration works as hoped.** `getEntityStoreRegistry().registerComponent(Class, Supplier)`
+  + `.registerSystem(ISystem)` from `JavaPlugin.setup()`; per-tick logic via
+  `EntityTickingSystem<EntityStore>` (`getQuery()` returns a `ComponentType`, which is itself a
+  `Query`; `tick(dt, index, chunk, store, buffer)` per entity). Verified: plugin loads and enables
+  on server 2026.03.26-89796e57b with two systems + three commands registered.
+- **Movement primitive candidate:** spawn via
+  `BlockEntity.assembleDefaultBlockEntity(TimeResource, blockTypeKey, pos)` →
+  `store.addEntity(holder, AddReason.SPAWN)`; move by writing
+  `TransformComponent.setPosition(Vector3d)` each tick (`teleportPosition` is the snap variant —
+  the naming implies setPosition interpolates client-side; confirm in-game).
+- **Rider carry candidate:** no built-in platform/vehicle attachment surfaced in the API scan
+  (built-in `mounts` is NPC riding); `Player.addLocationChange(ref, dx, dy, dz, accessor)` is a
+  server-side *relative* player move — exactly the Sable-style carry primitive. Confirm smoothness
+  in-game.
+- **Plugin/manifest gotchas:** `ServerVersion` must be a real version (warning → future hard
+  error); server scans `./mods` by default (passing `--mods mods` double-loads and aborts boot);
+  `--bare --boot-command stop` gives a fast headless load check. See docs/DEV-SERVER.md.
+
 ## Open questions (Phase 1 research)
 
 - **Block movement primitive:** does the API expose fast per-tick block region rewrites, or
