@@ -1,0 +1,19 @@
+# Gradle
+.gradle/
+build/
+
+# Hytale server jar — obtained from your Hytale install, never committed
+libraries/*.jar
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.DS_Store
+
+# Local dev server runtime
+run/
+
+# Local secrets / creds
+*.local.md
+*.local.toml

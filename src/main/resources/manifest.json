@@ -1,0 +1,19 @@
+{
+  "Group": "games.brennan",
+  "Name": "Bogie",
+  "Version": "${version}",
+  "Description": "Moving-structure physics for Hytale — trains, ships, and platforms that carry blocks, entities, and players. Foundation for the Dungeon Train port.",
+  "Authors": [
+    {
+      "Name": "Brennan Hatton",
+      "Email": "Brennan@brennanhatton.com",
+      "Url": "https://brennanhatton.com"
+    }
+  ],
+  "Website": "https://github.com/bh679/bogie-hytale",
+  "ServerVersion": "*",
+  "Dependencies": {},
+  "OptionalDependencies": {},
+  "DisabledByDefault": false,
+  "Main": "games.brennan.bogie.BogiePlugin"
+}

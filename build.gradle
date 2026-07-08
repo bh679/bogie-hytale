@@ -1,0 +1,54 @@
+plugins {
+    id 'java'
+}
+
+group = 'games.brennan.bogie'
+version = project.property('mod_version')
+
+repositories {
+    mavenCentral()
+    // Hytale does not (yet) publish the server API to a Maven repo.
+    // Drop HytaleServer.jar into libraries/ — see README.md § Setup.
+    flatDir {
+        dirs 'libraries'
+    }
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+// Without HytaleServer.jar (e.g. CI, fresh clone) the engine-agnostic core and its
+// tests still build; only the classes that import the Hytale API are skipped.
+def hytaleJar = file('libraries/HytaleServer.jar')
+if (!hytaleJar.exists()) {
+    logger.warn('libraries/HytaleServer.jar not found — building core only (plugin entry point excluded). See README.md § Setup.')
+    sourceSets.main.java.exclude 'games/brennan/bogie/BogiePlugin.java'
+}
+
+processResources {
+    inputs.property 'version', project.version
+    filesMatching('manifest.json') {
+        expand version: project.version
+    }
+}
+
+dependencies {
+    // Hytale Server API (server-side only — Hytale has no client mods)
+    if (hytaleJar.exists()) {
+        compileOnly name: 'HytaleServer'
+    }
+
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+test {
+    useJUnitPlatform()
+}
