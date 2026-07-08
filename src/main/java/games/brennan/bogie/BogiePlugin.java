@@ -4,6 +4,12 @@ import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 
 import games.brennan.bogie.hytale.StructureRegistry;
+import games.brennan.bogie.spike.PlatformCommand;
+import games.brennan.bogie.spike.PlatformComponent;
+import games.brennan.bogie.spike.PlatformTickSystem;
+import games.brennan.bogie.spike.RideCommand;
+import games.brennan.bogie.spike.RiderCarrySystem;
+import games.brennan.bogie.spike.StopCommand;
 
 import javax.annotation.Nonnull;
 
@@ -24,10 +30,17 @@ public class BogiePlugin extends JavaPlugin {
 
     @Override
     protected void setup() {
-        // Phase 1 (see docs/DESIGN.md): tick loop that advances each
-        // MovingStructure's kinematic frame and republishes block/entity
-        // positions. Event + command registration land here as the Hytale
-        // API surface for block manipulation is mapped.
+        // Phase 1 research spike (docs/DESIGN.md): a circling block-entity
+        // platform plus rider carry, to answer the movement-primitive and
+        // rider-attachment questions.
+        PlatformComponent.TYPE = this.getEntityStoreRegistry()
+                .registerComponent(PlatformComponent.class, PlatformComponent::new);
+        this.getEntityStoreRegistry().registerSystem(new PlatformTickSystem());
+        this.getEntityStoreRegistry().registerSystem(new RiderCarrySystem());
+
+        this.getCommandRegistry().registerCommand(new PlatformCommand());
+        this.getCommandRegistry().registerCommand(new RideCommand());
+        this.getCommandRegistry().registerCommand(new StopCommand());
     }
 
     public StructureRegistry getStructures() {
