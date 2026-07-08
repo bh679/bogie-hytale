@@ -15,7 +15,7 @@ human oversight at each stage.
   Hytale Server API (`com.hypixel.hytale.server.core.*`). All game logic is server-side; no
   client mods exist in Hytale.
 - **Repo:** bh679/bogie-hytale
-- **GitHub Project:** https://github.com/users/bh679/projects/{{PROJECT_NUMBER}}
+- **GitHub Project:** https://github.com/users/bh679/projects/18 (Project #18)
 - **Design doc:** `docs/DESIGN.md` — read it before planning any feature
 
 ### ⚠️ Licensing constraint (CRITICAL)
