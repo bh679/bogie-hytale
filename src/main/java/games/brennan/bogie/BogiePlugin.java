@@ -8,7 +8,6 @@ import games.brennan.bogie.spike.PlatformCommand;
 import games.brennan.bogie.spike.PlatformComponent;
 import games.brennan.bogie.spike.PlatformTickSystem;
 import games.brennan.bogie.spike.RideCommand;
-import games.brennan.bogie.spike.RiderCarrySystem;
 import games.brennan.bogie.spike.StopCommand;
 
 import javax.annotation.Nonnull;
@@ -30,13 +29,13 @@ public class BogiePlugin extends JavaPlugin {
 
     @Override
     protected void setup() {
-        // Phase 1 research spike (docs/DESIGN.md): a circling block-entity
-        // platform plus rider carry, to answer the movement-primitive and
+        // Phase 1 research spike (docs/DESIGN.md): a sliding block-entity
+        // platform (moved per tick via TransformComponent.setPosition) plus
+        // native-mount rider carry, to answer the movement-primitive and
         // rider-attachment questions.
         PlatformComponent.TYPE = this.getEntityStoreRegistry()
                 .registerComponent(PlatformComponent.class, PlatformComponent::new);
         this.getEntityStoreRegistry().registerSystem(new PlatformTickSystem());
-        this.getEntityStoreRegistry().registerSystem(new RiderCarrySystem());
 
         this.getCommandRegistry().registerCommand(new PlatformCommand());
         this.getCommandRegistry().registerCommand(new RideCommand());

@@ -32,7 +32,6 @@ public class StopCommand extends AbstractTargetPlayerCommand {
             }
         }
         SpikeState.clear();
-        SpikeState.CARRY_ENABLED.set(false);
         context.sendMessage(Message.raw("Removed " + removed + " Bogie platform(s)."));
     }
 }

@@ -7,20 +7,15 @@ import games.brennan.bogie.core.StructureFrame;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * Shared spike state between commands and tick systems. Phase 1 throwaway:
- * assumes a single world (all access happens on that world's tick thread,
- * apart from the carry toggle).
+ * Shared spike state between commands and the tick system. Phase 1 throwaway:
+ * assumes a single world (all access happens on that world's tick thread).
  */
 public final class SpikeState {
 
     /** Live platform frames, published by PlatformTickSystem each tick. */
     public static final Map<Ref<EntityStore>, StructureFrame> PLATFORMS = new ConcurrentHashMap<>();
-
-    /** Whether RiderCarrySystem applies platform deltas to players. */
-    public static final AtomicBoolean CARRY_ENABLED = new AtomicBoolean(false);
 
     private SpikeState() {
     }
