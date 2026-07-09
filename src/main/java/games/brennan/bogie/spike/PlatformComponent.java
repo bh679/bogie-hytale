@@ -16,20 +16,22 @@ public class PlatformComponent implements Component<EntityStore> {
     /** Assigned in BogiePlugin.setup() at registration time. */
     public static ComponentType<EntityStore, PlatformComponent> TYPE;
 
-    /** Centre of the circular path, world space. */
-    public Vec3 center = Vec3.ZERO;
-    public double radius = 3.0;
-    /** Radians per second. */
-    public double angularSpeed = 0.4;
-    public double angle = 0.0;
+    /** Spawn point, world space — the platform slides in a straight line from here. */
+    public Vec3 origin = Vec3.ZERO;
+    /** Horizontal travel direction (unit vector, world space). */
+    public Vec3 direction = new Vec3(1, 0, 0);
+    /** Blocks per second. */
+    public double speed = 0.6;
+    /** Distance travelled from origin. */
+    public double distance = 0.0;
 
     @Override
     public Component<EntityStore> clone() {
         PlatformComponent copy = new PlatformComponent();
-        copy.center = center;
-        copy.radius = radius;
-        copy.angularSpeed = angularSpeed;
-        copy.angle = angle;
+        copy.origin = origin;
+        copy.direction = direction;
+        copy.speed = speed;
+        copy.distance = distance;
         return copy;
     }
 }

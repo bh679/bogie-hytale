@@ -45,18 +45,20 @@ public class PlatformCommand extends AbstractTargetPlayerCommand {
 
         String blockType = this.blockArg.get(context);
         Vector3d playerPos = playerTransform.getPosition();
-        Vector3d spawnPos = new Vector3d(playerPos.x() + 2.0, playerPos.y(), playerPos.z());
+        // Spawn one block below the player's feet so it reads as a slab underfoot.
+        Vec3 origin = new Vec3(playerPos.x(), playerPos.y() - 1.0, playerPos.z());
+        Vector3d spawnPos = new Vector3d(origin.x(), origin.y(), origin.z());
 
         TimeResource time = (TimeResource) store.getResource(TimeResource.getResourceType());
         Holder<EntityStore> holder = BlockEntity.assembleDefaultBlockEntity(time, blockType, spawnPos);
 
         PlatformComponent platform = new PlatformComponent();
-        platform.center = new Vec3(playerPos.x(), playerPos.y(), playerPos.z());
+        platform.origin = origin;
         holder.addComponent(PlatformComponent.TYPE, platform);
 
         store.addEntity(holder, AddReason.SPAWN);
         context.sendMessage(Message.raw(
-                "Bogie platform spawned (" + blockType + "), circling you at radius "
-                        + platform.radius + ". /bogie_ride to toggle carry, /bogie_stop to clear."));
+                "Bogie platform spawned (" + blockType + ") under you, sliding +X at "
+                        + platform.speed + " b/s. Run /bogie_ride NOW to be carried; /bogie_stop to clear."));
     }
 }

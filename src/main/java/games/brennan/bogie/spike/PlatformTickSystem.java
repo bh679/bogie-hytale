@@ -35,11 +35,8 @@ public class PlatformTickSystem extends EntityTickingSystem<EntityStore> {
             return;
         }
 
-        platform.angle += platform.angularSpeed * dt;
-        Vec3 next = new Vec3(
-                platform.center.x() + Math.cos(platform.angle) * platform.radius,
-                platform.center.y(),
-                platform.center.z() + Math.sin(platform.angle) * platform.radius);
+        platform.distance += platform.speed * dt;
+        Vec3 next = platform.origin.add(platform.direction.scale(platform.distance));
 
         Vector3d current = transform.getPosition();
         Vec3 velocity = dt > 0

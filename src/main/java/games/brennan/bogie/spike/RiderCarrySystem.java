@@ -26,10 +26,11 @@ import games.brennan.bogie.core.Vec3;
  */
 public class RiderCarrySystem extends EntityTickingSystem<EntityStore> {
 
-    // Deck half-extents of a single spawned block, with walk-on margin.
-    private static final double DECK_HALF_XZ = 1.25;
-    private static final double DECK_Y_MIN = 0.0;
-    private static final double DECK_Y_MAX = 2.5;
+    // Deck half-extents around the platform, generous so a player standing near
+    // it (the block has no collision to stand ON) still counts as a rider.
+    private static final double DECK_HALF_XZ = 2.0;
+    private static final double DECK_Y_MIN = -1.0;
+    private static final double DECK_Y_MAX = 3.0;
 
     @Override
     public Query<EntityStore> getQuery() {
