@@ -45,6 +45,18 @@ public class PlatformTickSystem extends EntityTickingSystem<EntityStore> {
 
         transform.setPosition(new Vector3d(next.x(), next.y(), next.z()));
 
+        // Heartbeat (~1/s): 'current' is the transform BEFORE our write. If it
+        // drifts from our computed path while a player rides, something else
+        // (client authority / HandleMountInput) is also writing the transform.
+        platform.logAccumulator += dt;
+        if (platform.logAccumulator >= 1.0) {
+            platform.logAccumulator = 0;
+            double offPath = next.subtract(new Vec3(current.x(), current.y(), current.z())).length();
+            System.out.printf("[Bogie] platform dist=%.1f path=(%.1f, %.1f, %.1f) actual=(%.1f, %.1f, %.1f) offPath=%.2f%n",
+                    platform.distance, next.x(), next.y(), next.z(),
+                    current.x(), current.y(), current.z(), offPath);
+        }
+
         SpikeState.PLATFORMS.put(chunk.getReferenceTo(index),
                 new StructureFrame(next, 0, velocity));
     }

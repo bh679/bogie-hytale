@@ -24,6 +24,8 @@ public class PlatformComponent implements Component<EntityStore> {
     public double speed = 0.6;
     /** Distance travelled from origin. */
     public double distance = 0.0;
+    /** Seconds since last heartbeat log (diagnostics only). */
+    public double logAccumulator = 0.0;
 
     @Override
     public Component<EntityStore> clone() {
