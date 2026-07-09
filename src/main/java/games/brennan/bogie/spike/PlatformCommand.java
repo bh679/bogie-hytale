@@ -4,7 +4,7 @@ import com.hypixel.hytale.component.AddReason;
 import com.hypixel.hytale.component.Holder;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
-import com.hypixel.hytale.math.vector.Vector3d;
+import org.joml.Vector3d;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.command.system.arguments.system.RequiredArg;
@@ -45,13 +45,13 @@ public class PlatformCommand extends AbstractTargetPlayerCommand {
 
         String blockType = this.blockArg.get(context);
         Vector3d playerPos = playerTransform.getPosition();
-        Vector3d spawnPos = new Vector3d(playerPos.getX() + 2.0, playerPos.getY(), playerPos.getZ());
+        Vector3d spawnPos = new Vector3d(playerPos.x() + 2.0, playerPos.y(), playerPos.z());
 
         TimeResource time = (TimeResource) store.getResource(TimeResource.getResourceType());
         Holder<EntityStore> holder = BlockEntity.assembleDefaultBlockEntity(time, blockType, spawnPos);
 
         PlatformComponent platform = new PlatformComponent();
-        platform.center = new Vec3(playerPos.getX(), playerPos.getY(), playerPos.getZ());
+        platform.center = new Vec3(playerPos.x(), playerPos.y(), playerPos.z());
         holder.addComponent(PlatformComponent.TYPE, platform);
 
         store.addEntity(holder, AddReason.SPAWN);
