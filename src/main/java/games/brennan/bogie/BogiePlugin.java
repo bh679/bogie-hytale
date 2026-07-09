@@ -1,5 +1,7 @@
 package games.brennan.bogie;
 
+import com.hypixel.hytale.builtin.mounts.MountedComponent;
+import com.hypixel.hytale.server.core.event.events.player.PlayerReadyEvent;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 
@@ -40,6 +42,17 @@ public class BogiePlugin extends JavaPlugin {
         this.getCommandRegistry().registerCommand(new PlatformCommand());
         this.getCommandRegistry().registerCommand(new RideCommand());
         this.getCommandRegistry().registerCommand(new StopCommand());
+
+        // Defensive: strip any stale mount from a (re)joining player. A
+        // persisted MountedComponent pointing at a despawned platform — or
+        // worse, a BlockMount-with-entity payload — can NPE the client.
+        this.getEventRegistry().registerGlobal(PlayerReadyEvent.class, event -> {
+            var playerRef = event.getPlayerRef();
+            if (playerRef != null && playerRef.isValid()) {
+                playerRef.getStore().removeComponentIfExists(
+                        playerRef, MountedComponent.getComponentType());
+            }
+        });
     }
 
     public StructureRegistry getStructures() {

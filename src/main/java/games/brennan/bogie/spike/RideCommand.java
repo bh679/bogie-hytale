@@ -24,8 +24,12 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
  *   attaches and follows the mount as it moves.
  * - Controller choice matters (per HandleMountInput bytecode): Minecart routes
  *   player input INTO the mount (player drives it); BlockMount is chair
- *   semantics — passive rider, server drives the mount, movement input after a
- *   600ms grace dismounts. Bogie wants BlockMount.
+ *   semantics server-side, BUT pairing MountController.BlockMount with an
+ *   ENTITY target NPE-crashes the closed-source client (it expects a block
+ *   payload). ⚠ Never send BlockMount for entity mounts.
+ * - So: Minecart controller + server-side suppression of mount-driving input
+ *   is the passive-carriage architecture. The platform tick system re-drives
+ *   the transform every tick, overriding any input-applied movement.
  */
 public class RideCommand extends AbstractTargetPlayerCommand {
 
@@ -57,9 +61,9 @@ public class RideCommand extends AbstractTargetPlayerCommand {
         }
 
         MountedComponent mounted =
-                new MountedComponent(platformRef, new Rotation3f(), MountController.BlockMount);
+                new MountedComponent(platformRef, new Rotation3f(), MountController.Minecart);
         store.addComponent(ref, MountedComponent.getComponentType(), mounted);
         context.sendMessage(Message.raw(
-                "Mounted to Bogie platform (passenger mode) — don't touch WASD; movement keys dismount. /bogie_ride to dismount."));
+                "Mounted to Bogie platform. HANDS OFF WASD — testing if the server-driven slide carries you. /bogie_ride to dismount."));
     }
 }
