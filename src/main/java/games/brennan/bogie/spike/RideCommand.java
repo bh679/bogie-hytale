@@ -16,12 +16,16 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
  * /bogie_ride — mount (or dismount) the executing player onto a Bogie platform
  * using Hytale's native mount system.
  *
- * Phase 1 finding: player movement is client-authoritative, so nudging the
- * player's position server-side (Player.addLocationChange) is overridden by the
- * client every tick. The correct primitive is MountedComponent: adding it to the
- * player makes MountSystems.PlayerMount set the player's PlayerInput.mountId to
- * the mount entity's NetworkId, and the CLIENT then attaches and follows the
- * mount as it moves. This is how Bogie carriages will carry riders.
+ * Phase 1 findings:
+ * - Player movement is client-authoritative, so nudging the player's position
+ *   server-side (Player.addLocationChange) is overridden by the client.
+ * - MountedComponent is the real primitive: MountSystems.PlayerMount sets the
+ *   player's PlayerInput.mountId to the mount's NetworkId and the CLIENT
+ *   attaches and follows the mount as it moves.
+ * - Controller choice matters (per HandleMountInput bytecode): Minecart routes
+ *   player input INTO the mount (player drives it); BlockMount is chair
+ *   semantics — passive rider, server drives the mount, movement input after a
+ *   600ms grace dismounts. Bogie wants BlockMount.
  */
 public class RideCommand extends AbstractTargetPlayerCommand {
 
@@ -53,9 +57,9 @@ public class RideCommand extends AbstractTargetPlayerCommand {
         }
 
         MountedComponent mounted =
-                new MountedComponent(platformRef, new Rotation3f(), MountController.Minecart);
+                new MountedComponent(platformRef, new Rotation3f(), MountController.BlockMount);
         store.addComponent(ref, MountedComponent.getComponentType(), mounted);
         context.sendMessage(Message.raw(
-                "Mounted to Bogie platform — you should ride along as it moves. /bogie_ride again to dismount."));
+                "Mounted to Bogie platform (passenger mode) — don't touch WASD; movement keys dismount. /bogie_ride to dismount."));
     }
 }
